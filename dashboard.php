@@ -44,9 +44,9 @@ $sql_anggaran = "SELECT a.*, k.nama as nama_kategori, k.warna,
                      AND t.jenis_transaksi = 'pengeluaran'
                      AND DATE_FORMAT(t.tanggal_transaksi, '%Y-%m') = DATE_FORMAT(a.bulan, '%Y-%m')
                  WHERE a.id_pengguna = $user_id
-                 GROUP BY a.id_anggaran
-                 HAVING (terpakai / a.jumlah * 100) >= a.batas_peringatan
-                 ORDER BY (terpakai / a.jumlah * 100) DESC";
+                 GROUP BY a.id_anggaran, a.jumlah, a.batas_peringatan, k.nama, k.warna
+                 HAVING (COALESCE(SUM(t.jumlah), 0) / a.jumlah * 100) >= a.batas_peringatan
+                 ORDER BY (COALESCE(SUM(t.jumlah), 0) / a.jumlah * 100) DESC";
 $anggaran_kritis = mysqli_query($conn, $sql_anggaran);
 
 // Target aktif
