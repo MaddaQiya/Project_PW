@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 21, 2025 at 09:43 AM
+-- Generation Time: Nov 22, 2025 at 09:54 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -66,12 +66,12 @@ CREATE TABLE `kategori` (
 
 INSERT INTO `kategori` (`id_kategori`, `nama`, `jenis`, `warna`, `ikon`, `dibuat_pada`) VALUES
 (1, 'Makan & Minum', 'pengeluaran', '#FF7F50', '🍔', '2025-11-21 08:41:04'),
-(2, 'Transportasi', 'pengeluaran', '#1E90FF', '🚗', '2025-11-21 08:41:04'),
+(2, 'Transportasi', 'pengeluaran', '#1E90FF', '🚌', '2025-11-21 08:41:04'),
 (3, 'Kos/Sewa', 'pengeluaran', '#FF4500', '🏠', '2025-11-21 08:41:04'),
 (4, 'Pendidikan', 'pengeluaran', '#2E8B57', '📚', '2025-11-21 08:41:04'),
 (5, 'Hiburan', 'pengeluaran', '#9370DB', '🎮', '2025-11-21 08:41:04'),
 (6, 'Belanja', 'pengeluaran', '#FFD700', '🛒', '2025-11-21 08:41:04'),
-(7, 'Lain-lain', 'pengeluaran', '#808080', '📦', '2025-11-21 08:41:04'),
+(7, 'Lain-lain', 'pengeluaran', '#808080', '💼', '2025-11-21 08:41:04'),
 (8, 'Gaji/Upah', 'pemasukan', '#3CB371', '💰', '2025-11-21 08:41:04'),
 (9, 'Beasiswa', 'pemasukan', '#20B2AA', '🎓', '2025-11-21 08:41:04'),
 (10, 'Uang Saku', 'pemasukan', '#32CD32', '💵', '2025-11-21 08:41:04');
@@ -98,7 +98,9 @@ CREATE TABLE `pengguna` (
 --
 
 INSERT INTO `pengguna` (`id_pengguna`, `nama`, `email`, `password`, `nim`, `fakultas`, `uang_saku_bulanan`, `dibuat_pada`) VALUES
-(1, 'Ada Lovelace', 'ada@campuswallet.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', '21IF001', 'Informatika', 2000000.00, '2025-11-21 08:41:04');
+(1, 'Ada Lovelace', 'ada@campuswallet.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', '21IF001', 'Informatika', 2000000.00, '2025-11-21 08:41:04'),
+(2, 'Achmad Daud Ashshidieqiya', 'maddaqiya812@gmail.com', '$2y$10$F1LS0mjN0c32wzesBNvlkuBKcBzLoVYuWN7e4pTAnlduyj.c8TuOK', '123240209', 'Fakultas Teknik Industri', 0.00, '2025-11-21 08:56:58'),
+(3, 'Ada Ada Aja', 'maddaqiya@gmail.com', '$2y$10$lvlxRkDMGgNyrdU6O6BTPOeX5LO8oRMGnqnWEikNxyr97c4lxQuYK', '123240209', 'Fakultas Teknik Industri', 0.00, '2025-11-21 15:09:08');
 
 -- --------------------------------------------------------
 
@@ -123,7 +125,8 @@ CREATE TABLE `target_tabungan` (
 --
 
 INSERT INTO `target_tabungan` (`id_target`, `id_pengguna`, `nama`, `deskripsi`, `jumlah_target`, `jumlah_terkumpul`, `tanggal_target`, `status`, `dibuat_pada`) VALUES
-(1, 1, 'Laptop Baru', 'Beli laptop untuk coding', 8000000.00, 500000.00, '2026-06-01', 'aktif', '2025-11-21 08:41:04');
+(1, 1, 'Laptop Baru', 'Beli laptop untuk coding', 8000000.00, 8000000.00, '2026-06-01', 'selesai', '2025-11-21 08:41:04'),
+(2, 1, 'Iphone 17 Pro Max', 'HP Gweh Aipon HP Lu apah ?', 25749000.00, 1000000.00, '2026-04-22', 'aktif', '2025-11-22 20:43:30');
 
 -- --------------------------------------------------------
 
@@ -152,8 +155,10 @@ CREATE TABLE `transaksi` (
 INSERT INTO `transaksi` (`id_transaksi`, `id_pengguna`, `id_kategori`, `jumlah`, `jenis_transaksi`, `tanggal_transaksi`, `catatan`, `nama_akun`, `jenis_akun`, `id_target`, `dibuat_pada`) VALUES
 (1, 1, 1, 25000.00, 'pengeluaran', '2025-11-01', 'Makan siang', 'Dompet', 'tunai', NULL, '2025-11-21 08:41:04'),
 (2, 1, 3, 800000.00, 'pengeluaran', '2025-11-01', 'Bayar kos November', 'BNI', 'bank', NULL, '2025-11-21 08:41:04'),
-(3, 1, 9, 2000000.00, 'pemasukan', '2025-11-01', 'Uang saku bulanan', 'BNI', 'bank', NULL, '2025-11-21 08:41:04'),
-(4, 1, 2, 15000.00, 'pengeluaran', '2025-11-02', 'Ojol ke kampus', 'GoPay', 'ewallet', NULL, '2025-11-21 08:41:04');
+(3, 1, 9, 10000000.00, 'pemasukan', '2025-11-01', 'Uang saku bulanan', 'BNI', 'bank', NULL, '2025-11-21 08:41:04'),
+(4, 1, 2, 15000.00, 'pengeluaran', '2025-11-02', 'Ojol ke kampus', 'GoPay', 'ewallet', NULL, '2025-11-21 08:41:04'),
+(6, 1, 2, 1000000.00, 'pengeluaran', '2025-11-22', '', 'BNI', 'bank', 2, '2025-11-22 20:44:54'),
+(7, 1, 10, 1000000.00, 'pemasukan', '2025-11-22', '', 'BNI', 'bank', 2, '2025-11-22 20:48:57');
 
 --
 -- Indexes for dumped tables
@@ -215,19 +220,19 @@ ALTER TABLE `kategori`
 -- AUTO_INCREMENT for table `pengguna`
 --
 ALTER TABLE `pengguna`
-  MODIFY `id_pengguna` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_pengguna` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `target_tabungan`
 --
 ALTER TABLE `target_tabungan`
-  MODIFY `id_target` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_target` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `transaksi`
 --
 ALTER TABLE `transaksi`
-  MODIFY `id_transaksi` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_transaksi` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- Constraints for dumped tables

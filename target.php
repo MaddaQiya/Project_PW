@@ -8,21 +8,22 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 $user_id = $_SESSION['user_id'];
+$nama = $_SESSION['nama'];
 $error = '';
 $success = '';
 
 // Proses tambah target
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['tambah'])) {
-    $nama = escape($_POST['nama']);
+    $nama_target = escape($_POST['nama']);
     $deskripsi = escape($_POST['deskripsi']);
     $jumlah_target = floatval($_POST['jumlah_target']);
     $tanggal_target = escape($_POST['tanggal_target']);
     
-    if (empty($nama) || $jumlah_target <= 0) {
+    if (empty($nama_target) || $jumlah_target <= 0) {
         $error = 'Nama dan jumlah target wajib diisi!';
     } else {
         $query = "INSERT INTO target_tabungan (id_pengguna, nama, deskripsi, jumlah_target, tanggal_target) 
-                  VALUES ($user_id, '$nama', '$deskripsi', $jumlah_target, '$tanggal_target')";
+                  VALUES ($user_id, '$nama_target', '$deskripsi', $jumlah_target, '$tanggal_target')";
         
         if (mysqli_query($conn, $query)) {
             $success = 'Target berhasil ditambahkan!';
@@ -58,306 +59,356 @@ $result_target = mysqli_query($conn, $sql_target);
 <html lang="id">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Target Tabungan - CampussWallet</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+        }
+        
         body {
+            background: #f8f9fa;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f5f5f5;
         }
-        .navbar {
-            background: #667eea;
+        
+        /* Navbar */
+        .navbar-custom {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .navbar-custom .navbar-brand {
+            font-weight: bold;
+            font-size: 1.3rem;
             color: white;
-            padding: 15px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
         }
-        .navbar h1 { font-size: 20px; }
-        .navbar a {
-            color: white;
-            text-decoration: none;
-            padding: 8px 15px;
-            border-radius: 5px;
-        }
-        .navbar a:hover {
-            background: rgba(255,255,255,0.2);
-        }
-        .container {
-            max-width: 1200px;
-            margin: 30px auto;
-            padding: 0 20px;
-        }
-        .section {
+        
+        .btn-back {
             background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
-        }
-        h2 {
-            margin-bottom: 20px;
-            color: #333;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 500;
-            color: #555;
-        }
-        input, textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-        .btn {
-            padding: 8px 15px;
-            border-radius: 5px;
-            text-decoration: none;
-            font-size: 14px;
-            display: inline-block;
-            cursor: pointer;
+            color: var(--primary-color);
             border: none;
-        }
-        .btn-primary {
-            background: #28a745;
-            color: white;
-            padding: 12px;
-            width: 100%;
-        }
-        .btn-success {
-            background: #28a745;
-            color: white;
-        }
-        .btn-danger {
-            background: #dc3545;
-            color: white;
-        }
-        .target-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-            gap: 20px;
-        }
-        .target-card {
-            border: 1px solid #ddd;
+            font-weight: 600;
+            padding: 8px 20px;
             border-radius: 8px;
-            padding: 20px;
         }
+        
+        .btn-back:hover {
+            background: #f0f0f0;
+            color: var(--primary-color);
+        }
+        
+        .section-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            padding: 30px;
+            margin-bottom: 25px;
+        }
+        
+        .section-card h2 {
+            color: #333;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid var(--primary-color);
+            font-weight: 700;
+        }
+        
+        .target-card {
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 25px;
+            transition: all 0.3s;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .target-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(135deg, #11998e, #38ef7d);
+        }
+        
         .target-card.selesai {
             background: #f8f9fa;
-            opacity: 0.7;
+            opacity: 0.8;
         }
+        
+        .target-card.selesai::before {
+            background: linear-gradient(135deg, #0d6efd, #0a58ca);
+        }
+        
+        .target-card:hover {
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+            transform: translateY(-5px);
+        }
+        
+        .target-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+        }
+        
         .target-name {
-            font-size: 20px;
+            font-size: 1.4rem;
             font-weight: bold;
-            margin-bottom: 10px;
             color: #333;
         }
+        
+        .status-badge {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+        
+        .status-aktif { background: #d4edda; color: #155724; }
+        .status-selesai { background: #cce5ff; color: #004085; }
+        
         .target-desc {
-            color: #666;
-            margin-bottom: 15px;
-            font-size: 14px;
+            color: #6c757d;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
         }
-        .progress-bar {
+        
+        .progress-custom {
+            height: 35px;
+            border-radius: 20px;
             background: #e9ecef;
-            border-radius: 10px;
-            height: 30px;
+            margin: 20px 0;
             overflow: hidden;
-            margin: 15px 0;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
         }
-        .progress-fill {
+        
+        .progress-bar-custom {
             background: linear-gradient(135deg, #11998e, #38ef7d);
-            height: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 14px;
-            font-weight: bold;
+            font-weight: 700;
+            font-size: 0.95rem;
+            border-radius: 20px;
         }
-        .target-info {
+        
+        .info-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin: 10px 0;
-            font-size: 14px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin: 20px 0;
         }
+        
         .info-box {
-            padding: 10px;
             background: #f8f9fa;
-            border-radius: 5px;
-        }
-        .info-label {
-            color: #666;
-            font-size: 12px;
-        }
-        .info-value {
-            font-weight: bold;
-            color: #333;
-        }
-        .target-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-        }
-        .status-badge {
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: bold;
-            display: inline-block;
-        }
-        .status-aktif { background: #d4edda; color: #155724; }
-        .status-selesai { background: #cce5ff; color: #004085; }
-        .error {
-            background: #fee;
-            color: #c33;
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-        }
-        .success {
-            background: #efe;
-            color: #3c3;
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-        }
-        .no-data {
+            border-radius: 10px;
+            padding: 15px;
             text-align: center;
-            padding: 40px;
-            color: #999;
+        }
+        
+        .info-label {
+            color: #6c757d;
+            font-size: 0.85rem;
+            margin-bottom: 5px;
+        }
+        
+        .info-value {
+            font-weight: 700;
+            color: #333;
+            font-size: 1.1rem;
+        }
+        
+        .deadline-warning {
+            color: #dc3545;
+        }
+        
+        .deadline-safe {
+            color: #28a745;
         }
     </style>
 </head>
 <body>
-    <div class="navbar">
-        <h1>🎯 Target Tabungan</h1>
-        <div>
-            <a href="dashboard.php">← Dashboard</a>
+    <!-- Navbar -->
+    <nav class="navbar navbar-dark navbar-custom">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="target.php">
+                <i class="bi bi-bullseye"></i> Target Tabungan
+            </a>
+            <a href="dashboard.php" class="btn btn-back">
+                <i class="bi bi-arrow-left"></i> Dashboard
+            </a>
         </div>
-    </div>
+    </nav>
     
-    <div class="container">
+    <!-- Main Content -->
+    <div class="container-fluid py-4">
         <!-- Form Tambah Target -->
-        <div class="section">
-            <h2>Tambah Target Baru</h2>
+        <div class="section-card">
+            <h2><i class="bi bi-plus-circle"></i> Tambah Target Baru</h2>
             
             <?php if ($error): ?>
-                <div class="error"><?php echo $error; ?></div>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                <?php echo $error; ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
             <?php endif; ?>
             
             <?php if ($success): ?>
-                <div class="success"><?php echo $success; ?></div>
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="bi bi-check-circle-fill me-2"></i>
+                <?php echo $success; ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
             <?php endif; ?>
             
             <form method="POST" action="">
-                <div style="display: grid; grid-template-columns: 2fr 1fr 1fr auto; gap: 15px;">
-                    <div class="form-group">
-                        <label>Nama Target</label>
-                        <input type="text" name="nama" required placeholder="Contoh: Laptop Baru">
+                <div class="row g-3 mb-3">
+                    <div class="col-md-4">
+                        <label class="form-label"><i class="bi bi-tag"></i> Nama Target</label>
+                        <input type="text" name="nama" class="form-control" required placeholder="Contoh: Laptop Baru">
                     </div>
                     
-                    <div class="form-group">
-                        <label>Jumlah Target (Rp)</label>
-                        <input type="number" name="jumlah_target" required min="0" step="1000">
+                    <div class="col-md-4">
+                        <label class="form-label"><i class="bi bi-cash-stack"></i> Jumlah Target (Rp)</label>
+                        <input type="number" name="jumlah_target" class="form-control" required min="0" step="1000" placeholder="5000000">
                     </div>
                     
-                    <div class="form-group">
-                        <label>Tanggal Target</label>
-                        <input type="date" name="tanggal_target" required min="<?php echo date('Y-m-d'); ?>">
+                    <div class="col-md-3">
+                        <label class="form-label"><i class="bi bi-calendar-check"></i> Tanggal Target</label>
+                        <input type="date" name="tanggal_target" class="form-control" required min="<?php echo date('Y-m-d'); ?>">
                     </div>
                     
-                    <div class="form-group">
-                        <label>&nbsp;</label>
-                        <button type="submit" name="tambah" class="btn btn-primary">Tambah</button>
+                    <div class="col-md-1 d-flex align-items-end">
+                        <button type="submit" name="tambah" class="btn btn-success w-100">
+                            <i class="bi bi-plus-lg"></i>
+                        </button>
                     </div>
                 </div>
                 
-                <div class="form-group">
-                    <label>Deskripsi (opsional)</label>
-                    <textarea name="deskripsi" rows="2" placeholder="Deskripsi target tabungan"></textarea>
+                <div class="row">
+                    <div class="col-12">
+                        <label class="form-label"><i class="bi bi-text-left"></i> Deskripsi (Opsional)</label>
+                        <textarea name="deskripsi" class="form-control" rows="2" placeholder="Deskripsi target tabungan"></textarea>
+                    </div>
                 </div>
             </form>
         </div>
         
         <!-- Daftar Target -->
-        <div class="section">
-            <h2>Daftar Target</h2>
+        <div class="section-card">
+            <h2><i class="bi bi-list-stars"></i> Daftar Target Tabungan</h2>
             
             <?php if (mysqli_num_rows($result_target) > 0): ?>
-            <div class="target-grid">
+            <div class="row g-4">
                 <?php while ($t = mysqli_fetch_assoc($result_target)): 
                     $persen = ($t['jumlah_terkumpul'] / $t['jumlah_target']) * 100;
                     $hari_tersisa = floor((strtotime($t['tanggal_target']) - time()) / 86400);
                 ?>
-                <div class="target-card <?php echo $t['status'] == 'selesai' ? 'selesai' : ''; ?>">
-                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
-                        <div class="target-name"><?php echo $t['nama']; ?></div>
-                        <span class="status-badge status-<?php echo $t['status']; ?>">
-                            <?php echo strtoupper($t['status']); ?>
-                        </span>
-                    </div>
-                    
-                    <?php if ($t['deskripsi']): ?>
-                    <div class="target-desc"><?php echo $t['deskripsi']; ?></div>
-                    <?php endif; ?>
-                    
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: <?php echo min($persen, 100); ?>%">
-                            <?php echo number_format($persen, 1); ?>%
+                <div class="col-md-6 col-lg-4">
+                    <div class="target-card <?php echo $t['status'] == 'selesai' ? 'selesai' : ''; ?>">
+                        <div class="target-header">
+                            <div class="target-name"><?php echo $t['nama']; ?></div>
+                            <span class="status-badge status-<?php echo $t['status']; ?>">
+                                <?php echo $t['status'] == 'aktif' ? 'AKTIF' : 'SELESAI'; ?>
+                            </span>
                         </div>
-                    </div>
-                    
-                    <div class="target-info">
-                        <div class="info-box">
-                            <div class="info-label">Terkumpul</div>
-                            <div class="info-value"><?php echo rupiah($t['jumlah_terkumpul']); ?></div>
+                        
+                        <?php if ($t['deskripsi']): ?>
+                        <div class="target-desc">
+                            <i class="bi bi-info-circle"></i> <?php echo $t['deskripsi']; ?>
                         </div>
-                        <div class="info-box">
-                            <div class="info-label">Target</div>
-                            <div class="info-value"><?php echo rupiah($t['jumlah_target']); ?></div>
-                        </div>
-                        <div class="info-box">
-                            <div class="info-label">Sisa</div>
-                            <div class="info-value"><?php echo rupiah($t['jumlah_target'] - $t['jumlah_terkumpul']); ?></div>
-                        </div>
-                        <div class="info-box">
-                            <div class="info-label">Deadline</div>
-                            <div class="info-value" style="color: <?php echo $hari_tersisa < 30 ? '#dc3545' : '#28a745'; ?>">
-                                <?php echo $hari_tersisa; ?> hari lagi
+                        <?php endif; ?>
+                        
+                        <div class="progress progress-custom">
+                            <div class="progress-bar progress-bar-custom" 
+                                 role="progressbar" 
+                                 style="width: <?php echo min($persen, 100); ?>%">
+                                <?php echo number_format($persen, 1); ?>%
                             </div>
                         </div>
-                    </div>
-                    
-                    <?php if ($t['status'] == 'aktif'): ?>
-                    <div class="target-actions">
-                        <?php if ($persen >= 100): ?>
-                        <a href="?selesai=<?php echo $t['id_target']; ?>" class="btn btn-success"
-                           onclick="return confirm('Tandai target ini sebagai selesai?')">
-                            ✓ Tandai Selesai
-                        </a>
+                        
+                        <div class="info-grid">
+                            <div class="info-box">
+                                <div class="info-label">
+                                    <i class="bi bi-wallet2"></i> Terkumpul
+                                </div>
+                                <div class="info-value text-success">
+                                    <?php echo rupiah($t['jumlah_terkumpul']); ?>
+                                </div>
+                            </div>
+                            
+                            <div class="info-box">
+                                <div class="info-label">
+                                    <i class="bi bi-bullseye"></i> Target
+                                </div>
+                                <div class="info-value text-primary">
+                                    <?php echo rupiah($t['jumlah_target']); ?>
+                                </div>
+                            </div>
+                            
+                            <div class="info-box">
+                                <div class="info-label">
+                                    <i class="bi bi-currency-dollar"></i> Sisa
+                                </div>
+                                <div class="info-value text-warning">
+                                    <?php echo rupiah($t['jumlah_target'] - $t['jumlah_terkumpul']); ?>
+                                </div>
+                            </div>
+                            
+                            <div class="info-box">
+                                <div class="info-label">
+                                    <i class="bi bi-calendar-event"></i> Deadline
+                                </div>
+                                <div class="info-value <?php echo $hari_tersisa < 30 ? 'deadline-warning' : 'deadline-safe'; ?>">
+                                    <?php echo $hari_tersisa; ?> hari
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <?php if ($t['status'] == 'aktif'): ?>
+                        <div class="d-flex gap-2 mt-3">
+                            <?php if ($persen >= 100): ?>
+                            <a href="?selesai=<?php echo $t['id_target']; ?>" 
+                               class="btn btn-success flex-fill"
+                               onclick="return confirm('Tandai target ini sebagai selesai?')">
+                                <i class="bi bi-check-circle"></i> Selesai
+                            </a>
+                            <?php endif; ?>
+                            <a href="?hapus=<?php echo $t['id_target']; ?>" 
+                               class="btn btn-danger flex-fill"
+                               onclick="return confirm('Yakin ingin menghapus target ini?')">
+                                <i class="bi bi-trash"></i> Hapus
+                            </a>
+                        </div>
                         <?php endif; ?>
-                        <a href="?hapus=<?php echo $t['id_target']; ?>" class="btn btn-danger"
-                           onclick="return confirm('Yakin ingin menghapus target ini?')">
-                            Hapus
-                        </a>
                     </div>
-                    <?php endif; ?>
                 </div>
                 <?php endwhile; ?>
             </div>
             <?php else: ?>
-            <div class="no-data">
-                Belum ada target tabungan.<br>
-                Tambahkan target di form di atas.
+            <div class="text-center py-5">
+                <i class="bi bi-inbox" style="font-size: 4rem; color: #dee2e6;"></i>
+                <p class="text-muted mt-3">Belum ada target tabungan.</p>
+                <p class="text-muted">Mulai menabung dengan menambahkan target di atas!</p>
             </div>
             <?php endif; ?>
         </div>
     </div>
+    
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

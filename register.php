@@ -41,143 +41,240 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
 <html lang="id">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register - CampussWallet</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--primary-gradient);
             min-height: 100vh;
             display: flex;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
             padding: 20px;
         }
+        
         .register-container {
             background: white;
-            padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+            max-width: 550px;
             width: 100%;
-            max-width: 450px;
+            animation: slideUp 0.5s ease;
         }
-        h2 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 30px;
-            font-size: 24px;
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        label {
-            display: block;
-            color: #555;
-            margin-bottom: 8px;
-            font-size: 14px;
-        }
-        input[type="text"],
-        input[type="email"],
-        input[type="password"] {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 14px;
-        }
-        input:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-        .btn {
-            width: 100%;
-            padding: 12px;
-            background: #667eea;
+        
+        .register-header {
+            background: var(--primary-gradient);
             color: white;
+            padding: 35px 30px;
+            text-align: center;
+        }
+        
+        .register-header .logo {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .register-header h2 {
+            margin: 0;
+            font-size: 1.6rem;
+            font-weight: bold;
+        }
+        
+        .register-header p {
+            margin: 5px 0 0 0;
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+        
+        .register-body {
+            padding: 35px 30px;
+        }
+        
+        .form-floating {
+            margin-bottom: 18px;
+        }
+        
+        .form-floating input {
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+            padding-left: 45px;
+        }
+        
+        .form-floating input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.25rem rgba(102, 126, 234, 0.15);
+        }
+        
+        .form-floating label {
+            padding-left: 45px;
+        }
+        
+        .input-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6c757d;
+            z-index: 4;
+            font-size: 1.1rem;
+        }
+        
+        .btn-register {
+            background: var(--primary-gradient);
             border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
+            border-radius: 10px;
+            padding: 14px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            width: 100%;
+            color: white;
+            transition: transform 0.2s, box-shadow 0.2s;
         }
-        .btn:hover {
-            background: #5568d3;
+        
+        .btn-register:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+            color: white;
         }
-        .error {
-            background: #fee;
-            color: #c33;
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        .success {
-            background: #efe;
-            color: #3c3;
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
+        
         .login-link {
             text-align: center;
-            margin-top: 20px;
-            font-size: 14px;
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 1px solid #dee2e6;
         }
+        
         .login-link a {
             color: #667eea;
             text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+        
+        .login-link a:hover {
+            color: #764ba2;
+            text-decoration: underline;
+        }
+        
+        .optional-badge {
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 10px;
+            background: #e9ecef;
+            color: #6c757d;
+            margin-left: 5px;
         }
     </style>
 </head>
 <body>
     <div class="register-container">
-        <h2>📱 Daftar CampussWallet</h2>
+        <div class="register-header">
+            <div class="logo">
+                <i class="bi bi-person-plus-fill"></i>
+            </div>
+            <h2>Buat Akun Baru</h2>
+            <p>Mulai kelola keuanganmu sekarang!</p>
+        </div>
         
-        <?php if ($error): ?>
-            <div class="error"><?php echo $error; ?></div>
-        <?php endif; ?>
-        
-        <?php if ($success): ?>
-            <div class="success"><?php echo $success; ?></div>
-        <?php endif; ?>
-        
-        <form method="POST" action="">
-            <div class="form-group">
-                <label>Nama Lengkap</label>
-                <input type="text" name="nama" required>
+        <div class="register-body">
+            <?php if ($error): ?>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                <?php echo $error; ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
+            <?php endif; ?>
             
-            <div class="form-group">
-                <label>Email</label>
-                <input type="email" name="email" required>
+            <?php if ($success): ?>
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="bi bi-check-circle-fill me-2"></i>
+                <?php echo $success; ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
+            <?php endif; ?>
             
-            <div class="form-group">
-                <label>Password</label>
-                <input type="password" name="password" required>
+            <form method="POST" action="">
+                <div class="form-floating position-relative">
+                    <i class="bi bi-person input-icon"></i>
+                    <input type="text" class="form-control" id="nama" name="nama" 
+                           placeholder="Nama Lengkap" required autofocus>
+                    <label for="nama">Nama Lengkap</label>
+                </div>
+                
+                <div class="form-floating position-relative">
+                    <i class="bi bi-envelope input-icon"></i>
+                    <input type="email" class="form-control" id="email" name="email" 
+                           placeholder="Email" required>
+                    <label for="email">Email</label>
+                </div>
+                
+                <div class="form-floating position-relative">
+                    <i class="bi bi-lock input-icon"></i>
+                    <input type="password" class="form-control" id="password" name="password" 
+                           placeholder="Password" required minlength="6">
+                    <label for="password">Password</label>
+                </div>
+                
+                <div class="form-floating position-relative">
+                    <i class="bi bi-lock-fill input-icon"></i>
+                    <input type="password" class="form-control" id="confirm_password" name="confirm_password" 
+                           placeholder="Konfirmasi Password" required minlength="6">
+                    <label for="confirm_password">Konfirmasi Password</label>
+                </div>
+                
+                <div class="form-floating position-relative">
+                    <i class="bi bi-card-text input-icon"></i>
+                    <input type="text" class="form-control" id="nim" name="nim" 
+                           placeholder="NIM">
+                    <label for="nim">NIM <span class="optional-badge">opsional</span></label>
+                </div>
+                
+                <div class="form-floating position-relative">
+                    <i class="bi bi-building input-icon"></i>
+                    <input type="text" class="form-control" id="fakultas" name="fakultas" 
+                           placeholder="Fakultas">
+                    <label for="fakultas">Fakultas <span class="optional-badge">opsional</span></label>
+                </div>
+                
+                <button type="submit" name="register" class="btn btn-register">
+                    <i class="bi bi-check-circle me-2"></i>
+                    Daftar Sekarang
+                </button>
+            </form>
+            
+            <div class="login-link">
+                Sudah punya akun? 
+                <a href="index.php">
+                    <i class="bi bi-box-arrow-in-right"></i> Login di sini
+                </a>
             </div>
-            
-            <div class="form-group">
-                <label>Konfirmasi Password</label>
-                <input type="password" name="confirm_password" required>
-            </div>
-            
-            <div class="form-group">
-                <label>NIM (opsional)</label>
-                <input type="text" name="nim">
-            </div>
-            
-            <div class="form-group">
-                <label>Fakultas (opsional)</label>
-                <input type="text" name="fakultas">
-            </div>
-            
-            <button type="submit" name="register" class="btn">Daftar</button>
-        </form>
-        
-        <div class="login-link">
-            Sudah punya akun? <a href="index.php">Login di sini</a>
         </div>
     </div>
+    
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

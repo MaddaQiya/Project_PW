@@ -11,7 +11,7 @@ define("DB_PASS", "");
 define("DB_NAME", "campusswallet"); // pastikan nama DB sama persis
 
 // Koneksi ke database
-$conn = mysqli_connect("localhost: 3303", "root", "", "campusswallet");
+$conn = mysqli_connect("localhost", "root", "", "campusswallet");
 
 // Cek koneksi
 if (!$conn) {
@@ -19,7 +19,7 @@ if (!$conn) {
 }
 
 // Set charset UTF-8
-mysqli_set_charset($conn, "utf8");
+mysqli_set_charset($conn, "utf8mb4");
 
 // Fungsi untuk mencegah SQL Injection
 function escape($data) {
