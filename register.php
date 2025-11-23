@@ -113,23 +113,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
             padding: 35px 30px;
         }
         
-        .form-floating {
+        .mb-3 {
             margin-bottom: 18px;
         }
         
-        .form-floating input {
+        .form-control {
             border-radius: 10px;
             border: 2px solid #e9ecef;
-            padding-left: 45px;
+            padding: 14px 15px 14px 45px;
+            font-size: 0.95rem;
         }
         
-        .form-floating input:focus {
+        .form-control::placeholder {
+            color: #adb5bd;
+        }
+        
+        .form-control:focus {
             border-color: #667eea;
             box-shadow: 0 0 0 0.25rem rgba(102, 126, 234, 0.15);
-        }
-        
-        .form-floating label {
-            padding-left: 45px;
         }
         
         .input-icon {
@@ -178,15 +179,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
             color: #764ba2;
             text-decoration: underline;
         }
-        
-        .optional-badge {
-            font-size: 0.7rem;
-            padding: 2px 8px;
-            border-radius: 10px;
-            background: #e9ecef;
-            color: #6c757d;
-            margin-left: 5px;
-        }
     </style>
 </head>
 <body>
@@ -217,46 +209,40 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['register'])) {
             <?php endif; ?>
             
             <form method="POST" action="">
-                <div class="form-floating position-relative">
+                <div class="mb-3 position-relative">
                     <i class="bi bi-person input-icon"></i>
-                    <input type="text" class="form-control" id="nama" name="nama" 
+                    <input type="text" class="form-control ps-5" id="nama" name="nama" 
                            placeholder="Nama Lengkap" required autofocus>
-                    <label for="nama">Nama Lengkap</label>
                 </div>
                 
-                <div class="form-floating position-relative">
+                <div class="mb-3 position-relative">
                     <i class="bi bi-envelope input-icon"></i>
-                    <input type="email" class="form-control" id="email" name="email" 
+                    <input type="email" class="form-control ps-5" id="email" name="email" 
                            placeholder="Email" required>
-                    <label for="email">Email</label>
                 </div>
                 
-                <div class="form-floating position-relative">
+                <div class="mb-3 position-relative">
                     <i class="bi bi-lock input-icon"></i>
-                    <input type="password" class="form-control" id="password" name="password" 
+                    <input type="password" class="form-control ps-5" id="password" name="password" 
                            placeholder="Password" required minlength="6">
-                    <label for="password">Password</label>
                 </div>
                 
-                <div class="form-floating position-relative">
+                <div class="mb-3 position-relative">
                     <i class="bi bi-lock-fill input-icon"></i>
-                    <input type="password" class="form-control" id="confirm_password" name="confirm_password" 
+                    <input type="password" class="form-control ps-5" id="confirm_password" name="confirm_password" 
                            placeholder="Konfirmasi Password" required minlength="6">
-                    <label for="confirm_password">Konfirmasi Password</label>
                 </div>
                 
-                <div class="form-floating position-relative">
+                <div class="mb-3 position-relative">
                     <i class="bi bi-card-text input-icon"></i>
-                    <input type="text" class="form-control" id="nim" name="nim" 
-                           placeholder="NIM">
-                    <label for="nim">NIM <span class="optional-badge">opsional</span></label>
+                    <input type="text" class="form-control ps-5" id="nim" name="nim" 
+                           placeholder="NIM (opsional)">
                 </div>
                 
-                <div class="form-floating position-relative">
+                <div class="mb-3 position-relative">
                     <i class="bi bi-building input-icon"></i>
-                    <input type="text" class="form-control" id="fakultas" name="fakultas" 
-                           placeholder="Fakultas">
-                    <label for="fakultas">Fakultas <span class="optional-badge">opsional</span></label>
+                    <input type="text" class="form-control ps-5" id="fakultas" name="fakultas" 
+                           placeholder="Fakultas (opsional)">
                 </div>
                 
                 <button type="submit" name="register" class="btn btn-register">

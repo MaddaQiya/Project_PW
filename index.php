@@ -112,23 +112,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
             padding: 40px 30px;
         }
         
-        .form-floating {
+        .mb-3 {
             margin-bottom: 20px;
         }
         
-        .form-floating input {
+        .form-control {
             border-radius: 10px;
             border: 2px solid #e9ecef;
-            padding-left: 45px;
+            padding: 14px 15px 14px 45px;
+            font-size: 0.95rem;
         }
         
-        .form-floating input:focus {
+        .form-control::placeholder {
+            color: #adb5bd;
+        }
+        
+        .form-control:focus {
             border-color: #667eea;
             box-shadow: 0 0 0 0.25rem rgba(102, 126, 234, 0.15);
-        }
-        
-        .form-floating label {
-            padding-left: 45px;
         }
         
         .input-icon {
@@ -255,18 +256,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
             <?php endif; ?>
             
             <form method="POST" action="">
-                <div class="form-floating position-relative">
+                <div class="mb-3 position-relative">
                     <i class="bi bi-envelope input-icon"></i>
-                    <input type="email" class="form-control" id="email" name="email" 
+                    <input type="email" class="form-control ps-5" id="email" name="email" 
                            placeholder="Email" required autofocus>
-                    <label for="email">Email</label>
                 </div>
                 
-                <div class="form-floating position-relative">
+                <div class="mb-3 position-relative">
                     <i class="bi bi-lock input-icon"></i>
-                    <input type="password" class="form-control" id="password" name="password" 
+                    <input type="password" class="form-control ps-5" id="password" name="password" 
                            placeholder="Password" required>
-                    <label for="password">Password</label>
                 </div>
                 
                 <button type="submit" name="login" class="btn btn-login">
