@@ -240,7 +240,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
     <div class="login-container">
         <div class="login-header">
             <div class="logo">
-                <i class="bi bi-wallet2"></i>
+                <img src="CampussWalletnoBG.png" alt="CampussWallet Logo" style="width: 80px; height: 80px; margin-bottom: 15px;">
             </div>
             <h2>CampussWallet</h2>
             <p>Kelola Keuangan Mahasiswa dengan Mudah</p>

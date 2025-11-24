@@ -278,7 +278,8 @@ $target_aktif = mysqli_query($conn, $sql_target);
     <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
         <div class="container-fluid">
             <a class="navbar-brand" href="dashboard.php">
-                <i class="bi bi-wallet2"></i> CampussWallet
+                <img src="CampussWalletnoBG.png" alt="CampussWallet Logo" style="width: 50px; height: 50px; margin-bottom: 15px;">
+                CampussWallet
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
