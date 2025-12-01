@@ -8,7 +8,7 @@
 define("DB_HOST", "localhost");
 define("DB_USER", "root");
 define("DB_PASS", "");
-define("DB_NAME", "campusswallet"); // pastikan nama DB sama persis
+define("DB_NAME", "campusswallet");
 
 // Koneksi ke database
 $conn = mysqli_connect("localhost", "root", "", "campusswallet");
