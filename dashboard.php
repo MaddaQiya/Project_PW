@@ -25,13 +25,13 @@ $sql_bulan_ini = "SELECT
     AND YEAR(tanggal_transaksi) = YEAR(CURDATE())";
 $bulan_ini = mysqli_fetch_assoc(mysqli_query($conn, $sql_bulan_ini));
 
-// 5 transaksi terbaru
+// 10 transaksi terbaru
 $sql_transaksi = "SELECT t.*, k.nama as nama_kategori, k.ikon, k.warna 
                   FROM transaksi t 
                   JOIN kategori k ON t.id_kategori = k.id_kategori
                   WHERE t.id_pengguna = $user_id 
                   ORDER BY t.tanggal_transaksi DESC, t.dibuat_pada DESC 
-                  LIMIT 5";
+                  LIMIT 10";
 $transaksi_terbaru = mysqli_query($conn, $sql_transaksi);
 
 // Anggaran kritis
@@ -319,8 +319,7 @@ $target_aktif = mysqli_query($conn, $sql_target);
                 </ul>
             </div>
         </div>
-    </nav>
-    
+    </nav>    
     <!-- Main Content -->
     <div class="container-fluid py-4">
         <!-- Summary Cards -->

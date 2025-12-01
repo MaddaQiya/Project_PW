@@ -54,9 +54,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['simpan'])) {
             if ($kat['jenis'] != $jenis_transaksi) {
                 $error = 'Kategori tidak sesuai dengan jenis transaksi!';
             } else {
-                // Validasi target hanya untuk pemasukan
-                if ($id_target && $jenis_transaksi != 'pemasukan') {
-                    $error = 'Target tabungan hanya berlaku untuk pemasukan!';
+                // Validasi target hanya untuk pengeluaran (transfer dana)
+                if ($id_target && $jenis_transaksi != 'pengeluaran') {
+                    $error = 'Transfer ke target tabungan hanya berlaku untuk pengeluaran!';
                 } else {
                     // Insert transaksi
                     $query = "INSERT INTO transaksi (id_pengguna, id_kategori, jumlah, jenis_transaksi, 
@@ -66,8 +66,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['simpan'])) {
                               ($id_target ? $id_target : 'NULL') . ")";
                     
                     if (mysqli_query($conn, $query)) {
-                        // Jika ada target dan jenis pemasukan, update jumlah terkumpul
-                        if ($id_target && $jenis_transaksi == 'pemasukan') {
+                        // Jika ada target dan jenis pengeluaran, update jumlah terkumpul (transfer dana)
+                        if ($id_target && $jenis_transaksi == 'pengeluaran') {
                             mysqli_query($conn, "UPDATE target_tabungan 
                                                  SET jumlah_terkumpul = jumlah_terkumpul + $jumlah 
                                                  WHERE id_target = $id_target");
@@ -106,7 +106,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['simpan'])) {
             background: #f8f9fa;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        
         /* Navbar */
         .navbar-custom {
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
@@ -184,7 +183,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['simpan'])) {
             font-weight: 600;
             font-size: 0.95rem;
         }
-        
         .jenis-option input[type="radio"]:checked + .jenis-label {
             border-color: var(--primary-color);
             background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
@@ -370,11 +368,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['simpan'])) {
                     </div>
                 </div>
                 
-                <!-- Target Tabungan - Hanya untuk PEMASUKAN -->
+                <!-- Target Tabungan - Transfer Dana (PENGELUARAN) -->
                 <?php if (mysqli_num_rows($target) > 0): ?>
                 <div class="mb-3" id="target-section" style="display: none;">
                     <label for="id_target" class="form-label">
-                        <i class="bi bi-bullseye"></i> Link ke Target Tabungan (Opsional)
+                        <i class="bi bi-bullseye"></i> Transfer ke Target Tabungan (Opsional)
                     </label>
                     <select class="form-select" id="id_target" name="id_target">
                         <option value="">Tidak ada target</option>
@@ -390,7 +388,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['simpan'])) {
                     </select>
                     <div class="info-badge mt-2">
                         <i class="bi bi-info-circle-fill"></i>
-                        <strong>Khusus pemasukan:</strong> Jumlah transaksi akan otomatis ditambahkan ke target tabungan yang kamu pilih.
+                        <strong>Transfer ke tabungan:</strong> Uang akan dipindahkan dari saldo utama ke target tabungan. Ini adalah PENGELUARAN sehingga saldo utama akan berkurang.
                     </div>
                 </div>
                 <?php endif; ?>
@@ -433,13 +431,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['simpan'])) {
                     }
                 });
                 
-                // Tampilkan/sembunyikan section target tabungan
+                // Tampilkan section target hanya untuk PENGELUARAN (transfer dana)
                 if (targetSection) {
-                    if (jenisTransaksi === 'pemasukan') {
+                    if (jenisTransaksi === 'pengeluaran') {
                         targetSection.style.display = 'block';
                     } else {
                         targetSection.style.display = 'none';
-                        document.getElementById('id_target').value = ''; // Reset pilihan
+                        document.getElementById('id_target').value = '';
                     }
                 }
             }
@@ -482,8 +480,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['simpan'])) {
                 document.getElementById('nama_akun').focus();
                 return false;
             }
-            
-            // Konfirmasi sebelum submit
+             // Konfirmasi sebelum submit
             const jenisTransaksi = document.querySelector('input[name="jenis_transaksi"]:checked').value;
             const jenisText = jenisTransaksi === 'pemasukan' ? 'Pemasukan' : 'Pengeluaran';
             const kategoriText = document.getElementById('id_kategori').selectedOptions[0].text;
@@ -502,7 +499,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['simpan'])) {
             
             return true;
         });
-        
+
         // Format input jumlah dengan pemisah ribuan
         document.getElementById('jumlah').addEventListener('input', function(e) {
             let value = e.target.value.replace(/\D/g, '');
